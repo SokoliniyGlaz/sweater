@@ -1,10 +1,7 @@
 <#import "common.ftl" as c>
+<#import "login_registry.ftl" as l>
 
 <@c.page>
-<form action="/registration" method="post">
-    <input type="hidden" name="_csrf" value="${_csrf.token}">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+    ${message!}
+    <@l.login "/registration" true/>
 </@c.page>
