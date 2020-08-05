@@ -19,13 +19,17 @@ public class UserService implements UserDetailsService {
     private UserRepo userRepo;
     @Autowired
     private MailSender mailSender;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if(username == null){
-            throw new UsernameNotFoundException("User not authorized");
+        User user = userRepo.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
-        return userRepo.findByUsername(username);
+        return user;
     }
+
     public boolean addUser(User user){
         User userFromDb = userRepo.findByUsername(user.getUsername());
 
