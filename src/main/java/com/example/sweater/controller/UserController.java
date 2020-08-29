@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-
 public class UserController {
 
     @Autowired
@@ -57,5 +56,31 @@ public class UserController {
                                 @RequestParam String email){
         service.updateProfile(user,password,email);
         return "redirect:/user/profile";
+    }
+    @GetMapping("subscribe/{user}")
+    public String subscribe(@PathVariable User user,
+                            @AuthenticationPrincipal User currentUser
+                            ){
+        service.subscribe(currentUser,user);
+        return "redirect:/user-messages/" + user.getId();
+    }
+    @GetMapping("unsubscribe/{user}")
+    public String unsubscribe(@PathVariable User user,
+                            @AuthenticationPrincipal User currentUser
+                            ){
+        service.unsubscribe(currentUser,user);
+        return "redirect:/user-messages/" + user.getId();
+    }
+    @GetMapping("{type}/{user}/list")
+    public String getUserList(@PathVariable String type,
+                              @PathVariable User user,
+                              Model model){
+        model.addAttribute("userChannel",user);
+        model.addAttribute("type",type);
+        if("subscribers".equals(type)){
+            model.addAttribute("users",user.getSubscribers());
+        }
+        else model.addAttribute("users",user.getSubscriptions());
+        return "subscriptions";
     }
 }

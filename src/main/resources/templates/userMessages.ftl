@@ -1,29 +1,52 @@
 <#import "common.ftl" as c>
-<#include "security.ftl">
-
+    <#include "security.ftl">
 <@c.page>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-    <form method="get" action="filter" class="form-inline">
-        <input type="text" class="form-control" name="filter"  placeholder="Search by tag">
-        <input type="hidden" name="_csrf" value="${_csrf.token}">
-        <button type="submit" class="btn btn-primary ml-2">Search</button>
-    </form>
+    <h3>${userChannel.username}</h3>
+    <#if !isCurrentUser>
+        <#if !isSubscriber>
+        <a class="btn btn-info" href="/user/subscribe/${userChannel.id}">Subscribe</a>
+        <#else>
+        <a class="btn btn-info" href="/user/unsubscribe/${userChannel.id}">Unsubscribe</a>
+        </#if>
+    </#if>
+    <div class="container my-3">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">Subscriptions</div>
+                        <h3 class="card-text">
+                            <a href="/user/subscriptions/${userChannel.id}/list">${subscriptionsCount}</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Subscribers</div>
+                    <h3 class="card-text">
+                        <a href="/user/subscribers/${userChannel.id}/list">${subscribersCount}</a>
+                    </h3>
+                </div>
+            </div>
         </div>
     </div>
-
-    <a class="btn btn-primary mb-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-        Add new message
+    </div>
+    </div>
+    <#if isCurrentUser>
+    <a class="btn btn-primary m-4" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Message editor
     </a>
     <div class="collapse <#if message??>show</#if>" id="collapseExample">
         <div class="form-group mt-3">
             <form method="post"  enctype="multipart/form-data">
                 <div class="form-group">
-                        <input type="text" class="form-control ${(tagError??)?string('is-invalid', '')}"
-                               value= "<#if message??>${message.tag}</#if>" name="tag" placeholder="Insert tag">
+                    <input type="text" class="form-control ${(tagError??)?string('is-invalid', '')}"
+                           value= "<#if message??>${message.tag}</#if>" name="tag" placeholder="Insert tag">
                     <#if tagError??>
                         <div class="invalid-feedback">
-                           ${tagError}
+                            ${tagError}
                         </div>
                     </#if>
                 </div>
@@ -41,7 +64,7 @@
                            name="file">
                 </div>
                 <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                <input type="hidden" name="id" value="<#if message??>${message.id}</#if>" />
+                <input type="hidden" name="id"  value="<#if message??>${message.id}</#if>"/>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Save message</button>
                 </div>
@@ -49,8 +72,7 @@
             </form>
         </div>
     </div>
-
-
+    </#if>
     <div class="mb-3">List of messages</div>
     <div class="card-columns">
         <#list messages as message>
@@ -67,9 +89,9 @@
                 <div class="card-footer text-muted">
                     <a href="/user-messages/${message.author.id}">${message.authorName}</a>
                     <#if message.author.id == currentUserId>
-                    <a class="btn btn-primary " href="/user-messages/${message.author.id}?message=${message.id}">
-                    Edit
-                    </a>
+                        <a class="btn btn-primary" href="/user-messages/${message.author.id}?message=${message.id}">
+                            Edit
+                        </a>
                     </#if>
                 </div>
             </div>

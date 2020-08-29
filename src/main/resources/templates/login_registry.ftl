@@ -61,6 +61,6 @@
     </div>
     <button class="btn btn-primary" type="submit"><#if isRegisteredForm>Create<#else>Sign in</#if></button>
 </form>
-    <div><#if !isRegisteredForm><a href="/registration"  class="btn btn-primary" type="submit">Add new user</a></#if></div>
+    <div><#if !isRegisteredForm><a href="/registration"  class="btn btn-primary mt-3" type="submit">Add new user</a></#if></div>
 
 </#macro>
